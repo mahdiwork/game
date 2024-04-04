@@ -427,8 +427,7 @@ def send_music(m):
     bot.send_message(chanel_id,f"""
 #{dict_cid_countryname[cid]}
 *خرید زیرساخت و تجاری🏗️*
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+- - - - - - - - - - - - - - - - - -
 {text}
 """)
     markup=ReplyKeyboardMarkup()
@@ -446,8 +445,7 @@ def send_music(m):
     bot.send_message(chanel_id,f"""
 #{dict_cid_countryname[cid]}
 *خرید نظامی 🪖*
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+- - - - - - - - - - - - - - - - - -
 {text}
 """)
     markup=ReplyKeyboardMarkup()
@@ -487,9 +485,7 @@ def send_music(m):
 آی دی بازیکن:@{m.from_user.username}
 نام بازیکن : {m.chat.first_name}
 *اختراعات و سناریو📝*
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+- - - - - - - - - - - - - - - - - -
 {text}
 """,reply_markup=markup)
     markup=ReplyKeyboardMarkup()
@@ -511,9 +507,7 @@ def send_music(m):
 آی دی بازیکن:@{m.from_user.username}
 نام بازیکن : {m.chat.first_name}
 *خرید یورو🛍️*
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+- - - - - - - - - - - - - - - - - -
 {text}
 """,reply_markup=markup)
     markup=ReplyKeyboardMarkup()
@@ -535,9 +529,7 @@ def send_music(m):
 آی دی بازیکن:@{m.from_user.username}
 نام بازیکن : {m.chat.first_name}
 *ارتباط با ادمین👤
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+- - - - - - - - - - - - - - - - - -
 {text}
 """,reply_markup=markup)
     markup=ReplyKeyboardMarkup()
@@ -592,8 +584,7 @@ def panel_set_photo(m):
             bot.send_photo(chanel_id,photo_id,f"""
 #{dict_cid_countryname[cid]}
 *خرید زیرساخت و تجاری🏗️*
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+- - - - - - - - - - - - - - - - - -
 {caption}
 """)
             markup=ReplyKeyboardMarkup()
@@ -608,8 +599,7 @@ def panel_set_photo(m):
             bot.send_photo(chanel_id,photo_id,f"""
 #{dict_cid_countryname[cid]}
 *خرید نظامی 🪖*
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+- - - - - - - - - - - - - - - - - -
 {caption}
 """)
             markup=ReplyKeyboardMarkup()
