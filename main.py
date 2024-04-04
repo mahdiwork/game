@@ -62,10 +62,26 @@ def call_callback_data(call):
     status="on"
     for i in dict_cid_countryname:
         bot.send_message(i,"بازیکن عزیز بازی شروع شد")
-        
+    markup=InlineKeyboardMarkup()
+    if status=="off":
+        markup.add(InlineKeyboardButton("شروع بازی",callback_data="start"))
+    elif status=="on":
+        markup.add(InlineKeyboardButton("پایان بازی",callback_data="stop"))
+    markup.add(InlineKeyboardButton("مشاهده و تنظیمات بازیکنان",callback_data="show"))
+    markup.add(InlineKeyboardButton('آمار تمامی کاربران',callback_data='panel_amar'))
+    markup.add(InlineKeyboardButton('ارسال همگانی',callback_data='panel_brodcast'),InlineKeyboardButton('فوروارد همگانی',callback_data='panel_forall'))
+
+    bot.edit_message_reply_markup(cid,mid,reply_markup=markup)
     bot.answer_callback_query(call.id,"بازی شروع شد")
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith("stop"))
+def call_callback_data(call):
+    cid = call.message.chat.id
+    mid = call.message.message_id
+    markup=InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton("پایان بازی",callback_data="sstop"),InlineKeyboardButton("لغو",callback_data="back_panel"))
+    bot.edit_message_text("آیا از پایان بازی اطمینان دارید؟",cid,mid,reply_markup=markup)
+@bot.callback_query_handler(func=lambda call: call.data.startswith("sstop"))
 def call_callback_data(call):
     global status
     global list_country_selecting
@@ -79,6 +95,16 @@ def call_callback_data(call):
         bot.send_message(i,"بازیکن عزیز بازی به پایان رسید ")
         bot.send_message(i,"برای شرکت در بازی بعدی /start را بزنید")
     dict_cid_countryname={}
+    bot.delete_message(cid,mid)
+    markup=InlineKeyboardMarkup()
+    if status=="off":
+        markup.add(InlineKeyboardButton("شروع بازی",callback_data="start"))
+    elif status=="on":
+        markup.add(InlineKeyboardButton("پایان بازی",callback_data="stop"))
+    markup.add(InlineKeyboardButton("مشاهده و تنظیمات بازیکنان",callback_data="show"))
+    markup.add(InlineKeyboardButton('آمار تمامی کاربران',callback_data='panel_amar'))
+    markup.add(InlineKeyboardButton('ارسال همگانی',callback_data='panel_brodcast'),InlineKeyboardButton('فوروارد همگانی',callback_data='panel_forall'))
+    bot.send_message(cid,"پنل ادمین",reply_markup=markup)
     bot.answer_callback_query(call.id,"بازی به پایان رسید ")
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith("delete"))
@@ -161,10 +187,8 @@ def def_admin_change(call):
     dict_cid_countryname[uid]=country_name_new
     list_mid_info=dict_country_mid[country_name_new]
     markup=ReplyKeyboardMarkup()
-    markup.add("خرید زیرساخت و تجاری🏗️")
-    markup.add("خرید نظامی 🪖") 
-    markup.add("گفتگو بین کشور ها🗺️")
-    markup.add("ارسال اختراعات و سناریو📝")
+    markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
+    markup.add("گفتگو بین کشور ها🗺️","ارسال اختراعات و سناریو📝")
     markup.add("خرید یورو🛍️")
     markup.add("ارتباط با ادمین👤")
     bot.send_message(uid,"🔴کشور شما توسط ادمین تغییر کرد")
@@ -213,9 +237,9 @@ def def_admin(call):
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith("back"))
 def call_callback_panel_amar(call):
-    global userstep
     cid = call.message.chat.id
     mid = call.message.message_id
+    bot.delete_message(cid,mid)
     userStep[cid]=0
     markup=InlineKeyboardMarkup()
     if status=="off":
@@ -230,6 +254,11 @@ def call_callback_panel_amar(call):
 """,reply_markup=markup)
 
 
+@bot.callback_query_handler(func=lambda call: call.data.startswith("barresi"))
+def def_barresi(call):
+    cid = call.message.chat.id
+    mid = call.message.message_id
+    command_start(call.message)
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith("panel"))
 def call_callback_panel_amar(call):
@@ -278,7 +307,7 @@ def command_start(m):
 برای مدیریت بازی از دکمه های زیر استفاده کنید
 """,reply_markup=markup)
     else:
-        if is_user_member(cid ,chanel_id):
+        if is_user_member(cid ,chanel_id) :
             if cid not in dict_cid_countryname:
                 markup=ReplyKeyboardMarkup()
                 list_markup=[]
@@ -290,8 +319,10 @@ def command_start(m):
             else:
                 bot.send_message(cid,"شما قبلا کشور خود را انتخاب کرده اید")
         else:
-            markup=InlineKeyboardMarkup()
-            markup.add(InlineKeyboardButton("کانال راهنما",url="https://t.me/game_war_smokey")) 
+            markup=InlineKeyboardMarkup() 
+            markup.add(InlineKeyboardButton("کانال راهنما",url="https://t.me/game_war_smokey"))
+            markup.add(InlineKeyboardButton("گروه بازی",url="https://t.me/+M1lWxTZxKC05Mzk8"))
+            markup.add(InlineKeyboardButton("بررسی",callback_data="barresi")) 
             # markup.add(InlineKeyboardButton("کانال",url="https://t.me/+37s4G1zPx5E1YTlk")) # https://t.me/game_war_smokey
             bot.send_message(cid,f"""
 سلام {fname} عزیز
@@ -306,14 +337,11 @@ def menu(m):
     text=m.text
     list_mid_info=dict_country_mid[dict_cid_countryname[cid]]
     markup=ReplyKeyboardMarkup()
-    markup.add("خرید زیرساخت و تجاری🏗️")
-    markup.add("خرید نظامی 🪖") 
-    markup.add("گفتگو بین کشور ها🗺️")
-    markup.add("ارسال اختراعات و سناریو📝")
+    markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
+    markup.add("گفتگو بین کشور ها🗺️","ارسال اختراعات و سناریو📝")
     markup.add("خرید یورو🛍️")  
     markup.add("ارتباط با ادمین👤")
-    for i in list_mid_info:
-        bot.copy_message(cid,chanel_info_id,i,reply_markup=markup)
+    bot.send_message(cid,"برای بازی از دکمه های زیر استفاده کنید",reply_markup=markup)
 
 @bot.message_handler(func=lambda m: m.text=="ارتباط با ادمین👤" or m.text=="خرید زیرساخت و تجاری🏗️" or m.text=="خرید نظامی 🪖" or m.text=="گفتگو بین کشور ها🗺️" or m.text=="ارسال اختراعات و سناریو📝" or m.text=="خرید یورو🛍️"  )
 def ability(m):
@@ -341,7 +369,7 @@ def ability(m):
         tz = pytz.timezone('Asia/Tehran')
         now = datetime.now(tz)
         start_time = now.replace(hour=16, minute=0, second=0, microsecond=0)  # 4 PM
-        end_time = now.replace(hour=21, minute=0, second=0, microsecond=0) 
+        end_time = now.replace(hour=23, minute=0, second=0, microsecond=0) 
         if text=="خرید زیرساخت و تجاری🏗️":
             if start_time <= now <= end_time:
                 markup=ReplyKeyboardMarkup(resize_keyboard=True)
@@ -403,11 +431,9 @@ def send_music(m):
 {text}
 """)
     markup=ReplyKeyboardMarkup()
-    markup.add("خرید زیرساخت و تجاری🏗️")
-    markup.add("خرید نظامی 🪖") 
-    markup.add("گفتگو بین کشور ها🗺️")
-    markup.add("ارسال اختراعات و سناریو📝")
-    markup.add("خرید یورو🛍️")
+    markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
+    markup.add("گفتگو بین کشور ها🗺️","ارسال اختراعات و سناریو📝")
+    markup.add("خرید یورو🛍️")  
     markup.add("ارتباط با ادمین👤")
     userStep[cid]=0
     bot.send_message(cid,"پیام شما با موفقیت ارسال شد",reply_markup=markup)
@@ -423,11 +449,9 @@ def send_music(m):
 {text}
 """)
     markup=ReplyKeyboardMarkup()
-    markup.add("خرید زیرساخت و تجاری🏗️")
-    markup.add("خرید نظامی 🪖") 
-    markup.add("گفتگو بین کشور ها🗺️")
-    markup.add("ارسال اختراعات و سناریو📝")
-    markup.add("خرید یورو🛍️")
+    markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
+    markup.add("گفتگو بین کشور ها🗺️","ارسال اختراعات و سناریو📝")
+    markup.add("خرید یورو🛍️")  
     markup.add("ارتباط با ادمین👤")
     userStep[cid]=0
     bot.send_message(cid,"پیام شما با موفقیت ارسال شد",reply_markup=markup)    
@@ -443,11 +467,9 @@ def send_music(m):
 {text}
 """)
     markup=ReplyKeyboardMarkup()
-    markup.add("خرید زیرساخت و تجاری🏗️")
-    markup.add("خرید نظامی 🪖") 
-    markup.add("گفتگو بین کشور ها🗺️")
-    markup.add("ارسال اختراعات و سناریو📝")
-    markup.add("خرید یورو🛍️")
+    markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
+    markup.add("گفتگو بین کشور ها🗺️","ارسال اختراعات و سناریو📝")
+    markup.add("خرید یورو🛍️")  
     markup.add("ارتباط با ادمین👤")
     userStep[cid]=0
     bot.send_message(cid,"پیام شما با موفقیت ارسال شد",reply_markup=markup)
@@ -467,11 +489,9 @@ def send_music(m):
 {text}
 """,reply_markup=markup)
     markup=ReplyKeyboardMarkup()
-    markup.add("خرید زیرساخت و تجاری🏗️")
-    markup.add("خرید نظامی 🪖") 
-    markup.add("گفتگو بین کشور ها🗺️")
-    markup.add("ارسال اختراعات و سناریو📝")
-    markup.add("خرید یورو🛍️")
+    markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
+    markup.add("گفتگو بین کشور ها🗺️","ارسال اختراعات و سناریو📝")
+    markup.add("خرید یورو🛍️")  
     markup.add("ارتباط با ادمین👤")
     userStep[cid]=0
     bot.send_message(cid,"پیام شما با موفقیت ارسال شد",reply_markup=markup)
@@ -491,11 +511,9 @@ def send_music(m):
 {text}
 """,reply_markup=markup)
     markup=ReplyKeyboardMarkup()
-    markup.add("خرید زیرساخت و تجاری🏗️")
-    markup.add("خرید نظامی 🪖") 
-    markup.add("گفتگو بین کشور ها🗺️")
-    markup.add("ارسال اختراعات و سناریو📝")
-    markup.add("خرید یورو🛍️")
+    markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
+    markup.add("گفتگو بین کشور ها🗺️","ارسال اختراعات و سناریو📝")
+    markup.add("خرید یورو🛍️")  
     markup.add("ارتباط با ادمین👤")
     userStep[cid]=0
     bot.send_message(cid,"پیام شما با موفقیت ارسال شد",reply_markup=markup)
@@ -515,11 +533,9 @@ def send_music(m):
 {text}
 """,reply_markup=markup)
     markup=ReplyKeyboardMarkup()
-    markup.add("خرید زیرساخت و تجاری🏗️")
-    markup.add("خرید نظامی 🪖") 
-    markup.add("گفتگو بین کشور ها🗺️")
-    markup.add("ارسال اختراعات و سناریو📝")
-    markup.add("خرید یورو🛍️")
+    markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
+    markup.add("گفتگو بین کشور ها🗺️","ارسال اختراعات و سناریو📝")
+    markup.add("خرید یورو🛍️")  
     markup.add("ارتباط با ادمین👤")
     userStep[cid]=0
     bot.send_message(cid,"پیام شما با موفقیت  برای ادمین ارسال شد و تا چند دقیقه دیگر برسی میشود",reply_markup=markup)
@@ -567,11 +583,9 @@ def country(m):
                 dict_cid_countryname.setdefault(cid,country_name)
                 list_mid_info=dict_country_mid[country_name]
                 markup=ReplyKeyboardMarkup()
-                markup.add("خرید زیرساخت و تجاری🏗️")
-                markup.add("خرید نظامی 🪖") 
-                markup.add("گفتگو بین کشور ها🗺️")
-                markup.add("ارسال اختراعات و سناریو📝")
-                markup.add("خرید یورو🛍️")
+                markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
+                markup.add("گفتگو بین کشور ها🗺️","ارسال اختراعات و سناریو📝")
+                markup.add("خرید یورو🛍️")  
                 markup.add("ارتباط با ادمین👤")
                 image=bot.copy_message(cid,chanel_info_id,60)
                 for i in list_mid_info:
