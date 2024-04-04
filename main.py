@@ -6,12 +6,12 @@ from datetime import datetime
 
 databases.creat_database_tables()
 
-TOKEN ='6317356905:AAGQ2p8Lo0Kc4mkChTmE7ZbI2p1bzw9cIO8'
+TOKEN ='6598066482:AAGWDZFzYKqZw3rOCKieOkoNQ2vBDntNVuU'
 
 uid_for_send_message=0
 status="off"
-admin=748626808
-chanel_id=-1002049955263
+admin=6555370485
+chanel_id=-1002138408979
 chanel_info_id=-1002027679857
 dict_country_mid={"آمریکا":[3,4],"روسیه":[5,6], "چین":[7,8] ,"ژاپن":[9,10] ,"هند":[11,12] ,"فرانسه":[13,14],"کره جنوبی":[15,16],"ایتالیا":[17,18], "پاکستان":[19,20] ,"مصر":[21,22] ,"المان":[23,24] , "کانادا":[25,26] ,"استرالیا":[27,28], "ایران":[29,30] ,"عراق":[31,32] ,"اسرائیل":[33,34] ,"لبنان":[35,36] ,"عربستان":[37,38] ,"ترکیه":[39,40] ,"فلسطین":[41,42] ,"برزیل":[45,46] ,"اسپانیا":[43,44] ,"انگلیس":[47,48] ,"اوکراین":[49,50], "افغانستان":[51,52] ,"قزاقستان":[53,54], "سوریه":[55,56] ,"کره شمالی":[57,58]}#{country_name:[mid]}
 userStep={}
@@ -69,6 +69,7 @@ def call_callback_data(call):
 def call_callback_data(call):
     global status
     global list_country_selecting
+    global dict_cid_countryname
     cid = call.message.chat.id
     mid = call.message.message_id
     list_country_selecting=[]
@@ -82,11 +83,14 @@ def call_callback_data(call):
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith("delete"))
 def def_delete(call):
+    global list_country_selecting
     cid = call.message.chat.id
     mid = call.message.message_id
     uid=int(call.data.split("_")[1])
     bot.send_message(chanel_id,f"کشور '{dict_cid_countryname[uid]}' از بازی حذف شد")
+    print(list_country_selecting)
     list_country_selecting.remove(dict_cid_countryname[uid])
+    print(list_country_selecting)
     dict_cid_countryname.pop(uid)
     bot.delete_message(cid,mid)
     bot.send_message(uid,"شما از بازی حذف شدید")
@@ -180,6 +184,7 @@ def def_admin_change(call):
     markup=InlineKeyboardMarkup()
     list_markup=[]
     for i in list_country:
+        
         if i not in list_country_selecting:
             list_markup.append(InlineKeyboardButton(i,callback_data=f"select_{uid}_{i}"))
     markup.add(*list_markup)
@@ -286,7 +291,8 @@ def command_start(m):
                 bot.send_message(cid,"شما قبلا کشور خود را انتخاب کرده اید")
         else:
             markup=InlineKeyboardMarkup()
-            markup.add(InlineKeyboardButton("کانال",url="https://t.me/+37s4G1zPx5E1YTlk"))
+            markup.add(InlineKeyboardButton("کانال راهنما",url="https://t.me/game_war_smokey")) 
+            # markup.add(InlineKeyboardButton("کانال",url="https://t.me/+37s4G1zPx5E1YTlk")) # https://t.me/game_war_smokey
             bot.send_message(cid,f"""
 سلام {fname} عزیز
 به ربات بازی خوش آمدید 
@@ -556,7 +562,7 @@ def country(m):
     if m.chat.type == 'private':
         if country_name in list_country:
             if cid not in dict_cid_countryname:
-                list_country.remove(country_name)
+                # list_country.remove(country_name)
                 list_country_selecting.append(country_name)
                 dict_cid_countryname.setdefault(cid,country_name)
                 list_mid_info=dict_country_mid[country_name]
