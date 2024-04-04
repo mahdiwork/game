@@ -429,7 +429,6 @@ def send_music(m):
 *خرید زیرساخت و تجاری🏗️*
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 {text}
 """)
     markup=ReplyKeyboardMarkup()
@@ -449,7 +448,6 @@ def send_music(m):
 *خرید نظامی 🪖*
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 {text}
 """)
     markup=ReplyKeyboardMarkup()
@@ -596,7 +594,6 @@ def panel_set_photo(m):
 *خرید زیرساخت و تجاری🏗️*
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 {caption}
 """)
             markup=ReplyKeyboardMarkup()
@@ -613,7 +610,6 @@ def panel_set_photo(m):
 *خرید نظامی 🪖*
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 {caption}
 """)
             markup=ReplyKeyboardMarkup()
