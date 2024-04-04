@@ -367,8 +367,8 @@ def ability(m):
     if status=="on":
         tz = pytz.timezone('Asia/Tehran')
         now = datetime.now(tz)
-        start_time = now.replace(hour=16, minute=0, second=0, microsecond=0)  # 4 PM
-        end_time = now.replace(hour=23, minute=59, second=0, microsecond=0) 
+        start_time = now.replace(hour=00, minute=0, second=0, microsecond=0)  # 4 PM
+        end_time = now.replace(hour=6, minute=0, second=0, microsecond=0) 
         if text=="خرید زیرساخت و تجاری🏗️":
             if start_time <= now <= end_time:
                 markup=ReplyKeyboardMarkup(resize_keyboard=True)
@@ -423,10 +423,13 @@ def ability(m):
 def send_music(m):
     cid=m.chat.id
     text=m.text
+    print(m)
     bot.send_message(chanel_id,f"""
 #{dict_cid_countryname[cid]}
 *خرید زیرساخت و تجاری🏗️*
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 {text}
 """)
     markup=ReplyKeyboardMarkup()
@@ -444,7 +447,9 @@ def send_music(m):
     bot.send_message(chanel_id,f"""
 #{dict_cid_countryname[cid]}
 *خرید نظامی 🪖*
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 {text}
 """)
     markup=ReplyKeyboardMarkup()
@@ -461,8 +466,8 @@ def send_music(m):
     text=m.text
     bot.send_message(chanel_id,f"""
 #{dict_cid_countryname[cid]}
-*بیانیه کشور🗺️*
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
 {text}
 """)
     markup=ReplyKeyboardMarkup()
@@ -484,7 +489,9 @@ def send_music(m):
 آی دی بازیکن:@{m.from_user.username}
 نام بازیکن : {m.chat.first_name}
 *اختراعات و سناریو📝*
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 {text}
 """,reply_markup=markup)
     markup=ReplyKeyboardMarkup()
@@ -506,7 +513,9 @@ def send_music(m):
 آی دی بازیکن:@{m.from_user.username}
 نام بازیکن : {m.chat.first_name}
 *خرید یورو🛍️*
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 {text}
 """,reply_markup=markup)
     markup=ReplyKeyboardMarkup()
@@ -528,7 +537,9 @@ def send_music(m):
 آی دی بازیکن:@{m.from_user.username}
 نام بازیکن : {m.chat.first_name}
 *ارتباط با ادمین👤
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 {text}
 """,reply_markup=markup)
     markup=ReplyKeyboardMarkup()
@@ -569,6 +580,63 @@ def send_music(m):
         markup.add(InlineKeyboardButton("بازگشت به پنل",callback_data="back_panel"))
         bot.send_message(cid,"پیام شما دریافت شد برای فوروارد همگانی تایید را بزنید",reply_markup=markup)
         userStep[cid]=0
+
+@bot.message_handler(content_types=['photo'])
+def panel_set_photo(m):
+    cid = m.chat.id
+    mid = m.message_id
+    if m.chat.type=="private":
+        caption=m.caption
+        photo_id=m.photo[-1].file_id
+        print(photo_id)
+        print(get_user_step(m.chat.id))
+        if get_user_step(m.chat.id)==1:
+            bot.send_photo(chanel_id,photo_id,f"""
+#{dict_cid_countryname[cid]}
+*خرید زیرساخت و تجاری🏗️*
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+{caption}
+""")
+            markup=ReplyKeyboardMarkup()
+            markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
+            markup.add("بیانیه کشور🗺️","اختراعات و سناریو📝")
+            markup.add("خرید یورو🛍️")  
+            markup.add("ارتباط با ادمین👤")
+            userStep[cid]=0
+            bot.send_message(cid,"پیام شما با موفقیت ارسال شد",reply_markup=markup)
+
+        elif get_user_step(m.chat.id)==2:
+            bot.send_photo(chanel_id,photo_id,f"""
+#{dict_cid_countryname[cid]}
+*خرید نظامی 🪖*
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+{caption}
+""")
+            markup=ReplyKeyboardMarkup()
+            markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
+            markup.add("بیانیه کشور🗺️","اختراعات و سناریو📝")
+            markup.add("خرید یورو🛍️")  
+            markup.add("ارتباط با ادمین👤")
+            userStep[cid]=0
+            bot.send_message(cid,"پیام شما با موفقیت ارسال شد",reply_markup=markup)
+
+        elif get_user_step(m.chat.id)==3:
+            bot.send_photo(chanel_id,photo_id,f"""
+#{dict_cid_countryname[cid]}
+
+{caption}
+""")
+            markup=ReplyKeyboardMarkup()
+            markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
+            markup.add("بیانیه کشور🗺️","اختراعات و سناریو📝")
+            markup.add("خرید یورو🛍️")  
+            markup.add("ارتباط با ادمین👤")
+            userStep[cid]=0
+            bot.send_message(cid,"پیام شما با موفقیت ارسال شد",reply_markup=markup)
 
 @bot.message_handler(func=lambda m: True )
 def country(m):
