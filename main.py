@@ -384,7 +384,7 @@ def ability(m):
         tz = pytz.timezone('Asia/Tehran')
         now = datetime.now(tz)
         start_time = now.replace(hour=16, minute=0, second=0, microsecond=0)  # 4 PM
-        end_time = now.replace(hour=21, minute=0, second=0, microsecond=0) 
+        end_time = now.replace(hour=20, minute=0, second=0, microsecond=0) 
         if text=="خرید زیرساخت و تجاری🏗️":
             if start_time <= now <= end_time:
                 markup=ReplyKeyboardMarkup(resize_keyboard=True)
