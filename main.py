@@ -309,15 +309,31 @@ def command_start(m):
     else:
         if is_user_member(cid ,chanel_id) :
             if cid not in dict_cid_countryname:
-                markup=ReplyKeyboardMarkup()
-                list_markup=[]
-                for i in list_country:
-                    if i not in list_country_selecting:
-                        list_markup.append(i)
-                markup.add(*list_markup)
-                bot.send_message(cid,"لطفا برای شروع بازی کشور مورد نظر خود را انتخاب کنید",reply_markup=markup)
+                if status=="off":
+                    markup=ReplyKeyboardMarkup()
+                    list_markup=[]
+                    for i in list_country:
+                        if i not in list_country_selecting:
+                            list_markup.append(i)
+                    markup.add(*list_markup)
+                    bot.send_message(cid,"لطفا برای شروع بازی کشور مورد نظر خود را انتخاب کنید",reply_markup=markup)
+                else:
+                    bot.send_message(cid,"""
+شما نمیتوانید عضو  بازی شوید 🚫
+
+بازی درحال برگزاری است☢️
+
+اطلاعات بیشتر⬇️
+
+                                 @game_war_smokey
+""")
             else:
-                bot.send_message(cid,"شما قبلا کشور خود را انتخاب کرده اید")
+                markup=ReplyKeyboardMarkup()
+                markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
+                markup.add("بیانیه کشور🗺️","اختراعات و سناریو📝")
+                markup.add("خرید یورو🛍️")  
+                markup.add("ارتباط با ادمین👤")
+                bot.send_message(cid,"شما قبلا کشور خود را انتخاب کرده اید",reply_markup=markup)
         else:
             markup=InlineKeyboardMarkup() 
             markup.add(InlineKeyboardButton("کانال راهنما",url="https://t.me/game_war_smokey"))
@@ -367,8 +383,8 @@ def ability(m):
     if status=="on":
         tz = pytz.timezone('Asia/Tehran')
         now = datetime.now(tz)
-        start_time = now.replace(hour=00, minute=0, second=0, microsecond=0)  # 4 PM
-        end_time = now.replace(hour=6, minute=0, second=0, microsecond=0) 
+        start_time = now.replace(hour=16, minute=0, second=0, microsecond=0)  # 4 PM
+        end_time = now.replace(hour=21, minute=0, second=0, microsecond=0) 
         if text=="خرید زیرساخت و تجاری🏗️":
             if start_time <= now <= end_time:
                 markup=ReplyKeyboardMarkup(resize_keyboard=True)
