@@ -336,7 +336,7 @@ def command_start(m):
                 bot.send_message(cid,"شما قبلا کشور خود را انتخاب کرده اید",reply_markup=markup)
         else:
             markup=InlineKeyboardMarkup() 
-            markup.add(InlineKeyboardButton("کانال راهنما",url="https://t.me/game_war_smokey"))
+            markup.add(InlineKeyboardButton("کانال بازی",url="https://t.me/game_war_smokey"))
             markup.add(InlineKeyboardButton("گروه بازی",url="https://t.me/+M1lWxTZxKC05Mzk8"))
             markup.add(InlineKeyboardButton("بررسی",callback_data="barresi")) 
             # markup.add(InlineKeyboardButton("کانال",url="https://t.me/+37s4G1zPx5E1YTlk")) # https://t.me/game_war_smokey
@@ -659,7 +659,7 @@ def country(m):
                 image=bot.copy_message(cid,chanel_info_id,60)
                 for i in list_mid_info:
                     bot.copy_message(cid,chanel_info_id,i)
-                bot.send_message(cid,"برای بازی از دکمه های زیر استفاده کنید",reply_markup=markup)
+                bot.send_message(cid,"کشور شما تایید شد ، صبر کنید بازی از طرف ادمین شروع بشه🗺️",reply_markup=markup)
             else:
                 bot.send_message(cid,"شما قبلا کشور خود را انتخاب کرده اید")
         else:
