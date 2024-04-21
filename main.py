@@ -8,8 +8,13 @@ databases.creat_database_tables()
 
 TOKEN ='6598066482:AAGWDZFzYKqZw3rOCKieOkoNQ2vBDntNVuU'
 
+niro=-1002041587417
+daraii=-1002125850456
+grop_id=-1002133275517#-4100126451
+
 uid_for_send_message=0
 status="off"
+activation="off"
 admin=6555370485
 chanel_id=-1002138408979
 chanel_info_id=-1002027679857
@@ -54,9 +59,61 @@ def listener(messages):
 bot = telebot.TeleBot(TOKEN)
 bot.set_update_listener(listener)
 
+activation
+@bot.callback_query_handler(func=lambda call: call.data.startswith("activation"))
+def call_callback_data(call):
+    global activation
+    cid = call.message.chat.id
+    mid = call.message.message_id
+    activation="on"
+    for i in dict_cid_countryname:
+        bot.send_message(i,"بازیکن عزیز بازی شروع شد")
+    markup=InlineKeyboardMarkup()
+    if status=="off":
+        markup.add(InlineKeyboardButton("شروع بازی",callback_data="start"))
+    elif status=="on":
+        markup.add(InlineKeyboardButton("پایان بازی",callback_data="stop"))
+    if activation=="off":
+        markup.add(InlineKeyboardButton("اجازه برای ارسال پیام بازیکنان",callback_data="activation"))
+    elif activation=="on":
+        markup.add(InlineKeyboardButton("قطع اجازه ارسال پیام بازیکنان",callback_data="deactivation"))
+
+    markup.add(InlineKeyboardButton("مشاهده و تنظیمات بازیکنان",callback_data="show"))
+    markup.add(InlineKeyboardButton('آمار تمامی کاربران',callback_data='panel_amar'))
+    markup.add(InlineKeyboardButton('ارسال همگانی',callback_data='panel_brodcast'),InlineKeyboardButton('فوروارد همگانی',callback_data='panel_forall'))
+
+    bot.edit_message_reply_markup(cid,mid,reply_markup=markup)
+    bot.answer_callback_query(call.id,"قابلیت ارسال پیام برای بازیکنان فعال شد")
+
+@bot.callback_query_handler(func=lambda call: call.data.startswith("deactivation"))
+def call_callback_data(call):
+    global activation
+    cid = call.message.chat.id
+    mid = call.message.message_id
+    activation="off"
+    for i in dict_cid_countryname:
+        bot.send_message(i,"بازیکن عزیز بازی شروع شد")
+    markup=InlineKeyboardMarkup()
+    if status=="off":
+        markup.add(InlineKeyboardButton("شروع بازی",callback_data="start"))
+    elif status=="on":
+        markup.add(InlineKeyboardButton("پایان بازی",callback_data="stop"))
+    if activation=="off":
+        markup.add(InlineKeyboardButton("اجازه برای ارسال پیام بازیکنان",callback_data="activation"))
+    elif activation=="on":
+        markup.add(InlineKeyboardButton("قطع اجازه ارسال پیام بازیکنان",callback_data="deactivation"))
+
+    markup.add(InlineKeyboardButton("مشاهده و تنظیمات بازیکنان",callback_data="show"))
+    markup.add(InlineKeyboardButton('آمار تمامی کاربران',callback_data='panel_amar'))
+    markup.add(InlineKeyboardButton('ارسال همگانی',callback_data='panel_brodcast'),InlineKeyboardButton('فوروارد همگانی',callback_data='panel_forall'))
+
+    bot.edit_message_reply_markup(cid,mid,reply_markup=markup)
+    bot.answer_callback_query(call.id,"قابلیت ارسال پیام برای بازیکنان غیر فعال شد")
+
 @bot.callback_query_handler(func=lambda call: call.data.startswith("start"))
 def call_callback_data(call):
     global status
+    global activation
     cid = call.message.chat.id
     mid = call.message.message_id
     status="on"
@@ -67,6 +124,11 @@ def call_callback_data(call):
         markup.add(InlineKeyboardButton("شروع بازی",callback_data="start"))
     elif status=="on":
         markup.add(InlineKeyboardButton("پایان بازی",callback_data="stop"))
+    if activation=="off":
+        markup.add(InlineKeyboardButton("اجازه برای ارسال پیام بازیکنان",callback_data="activation"))
+    elif activation=="on":
+        markup.add(InlineKeyboardButton("قطع اجازه ارسال پیام بازیکنان",callback_data="deactivation"))
+
     markup.add(InlineKeyboardButton("مشاهده و تنظیمات بازیکنان",callback_data="show"))
     markup.add(InlineKeyboardButton('آمار تمامی کاربران',callback_data='panel_amar'))
     markup.add(InlineKeyboardButton('ارسال همگانی',callback_data='panel_brodcast'),InlineKeyboardButton('فوروارد همگانی',callback_data='panel_forall'))
@@ -84,6 +146,7 @@ def call_callback_data(call):
 @bot.callback_query_handler(func=lambda call: call.data.startswith("sstop"))
 def call_callback_data(call):
     global status
+    global activation
     global list_country_selecting
     global dict_cid_countryname
     cid = call.message.chat.id
@@ -101,6 +164,11 @@ def call_callback_data(call):
         markup.add(InlineKeyboardButton("شروع بازی",callback_data="start"))
     elif status=="on":
         markup.add(InlineKeyboardButton("پایان بازی",callback_data="stop"))
+    if activation=="off":
+        markup.add(InlineKeyboardButton("اجازه برای ارسال پیام بازیکنان",callback_data="activation"))
+    elif activation=="on":
+        markup.add(InlineKeyboardButton("قطع اجازه ارسال پیام بازیکنان",callback_data="deactivation"))
+
     markup.add(InlineKeyboardButton("مشاهده و تنظیمات بازیکنان",callback_data="show"))
     markup.add(InlineKeyboardButton('آمار تمامی کاربران',callback_data='panel_amar'))
     markup.add(InlineKeyboardButton('ارسال همگانی',callback_data='panel_brodcast'),InlineKeyboardButton('فوروارد همگانی',callback_data='panel_forall'))
@@ -192,7 +260,7 @@ def def_admin_change(call):
     markup.add("خرید یورو🛍️")
     markup.add("ارتباط با ادمین👤")
     bot.send_message(uid,"🔴کشور شما توسط ادمین تغییر کرد")
-    bot.copy_message(uid,chanel_info_id,60)
+    bot.copy_message(uid,chanel_info_id,2)
     for i in list_mid_info:
         bot.copy_message(uid,chanel_info_id,i)
     bot.send_message(uid,"برای بازی از دکمه های زیر استفاده کنید",reply_markup=markup) 
@@ -237,6 +305,7 @@ def def_admin(call):
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith("back"))
 def call_callback_panel_amar(call):
+    global activation
     cid = call.message.chat.id
     mid = call.message.message_id
     bot.delete_message(cid,mid)
@@ -246,6 +315,10 @@ def call_callback_panel_amar(call):
         markup.add(InlineKeyboardButton("شروع بازی",callback_data="start"))
     elif status=="on":
         markup.add(InlineKeyboardButton("پایان بازی",callback_data="stop"))
+    if activation=="off":
+        markup.add(InlineKeyboardButton("اجازه برای ارسال پیام بازیکنان",callback_data="activation"))
+    elif activation=="on":
+        markup.add(InlineKeyboardButton("قطع اجازه ارسال پیام بازیکنان",callback_data="deactivation"))
     markup.add(InlineKeyboardButton("مشاهده و تنظیمات بازیکنان",callback_data="show"))
     markup.add(InlineKeyboardButton('آمار تمامی کاربران',callback_data='panel_amar'))
     markup.add(InlineKeyboardButton('ارسال همگانی',callback_data='panel_brodcast'),InlineKeyboardButton('فوروارد همگانی',callback_data='panel_forall'))
@@ -259,6 +332,41 @@ def def_barresi(call):
     cid = call.message.chat.id
     mid = call.message.message_id
     command_start(call.message)
+
+@bot.callback_query_handler(func=lambda call: call.data.startswith("ejazedadn"))
+def def_barresi(call):
+    cid = call.message.chat.id
+    mid = call.message.message_id
+    uid = int(call.data.split("_")[-1])
+    markup=ReplyKeyboardMarkup()
+    list_markup=[]
+    for i in list_country:
+        if i not in list_country_selecting:
+            list_markup.append(i)
+    markup.add(*list_markup)
+    bot.send_message(uid,"اجازه بازی به شما داده شد")
+    bot.send_message(uid,"لطفا برای شروع بازی کشور مورد نظر خود را انتخاب کنید",reply_markup=markup)
+    bot.send_message(cid,"اجازه داده شد")
+@bot.callback_query_handler(func=lambda call: call.data.startswith("ejazenadadn"))
+def def_barresi(call):
+    cid = call.message.chat.id
+    mid = call.message.message_id
+    uid = int(call.data.split("_")[-1])
+    bot.send_message(uid,"اجازه بازی از طرف ادمین به شما داده نشد")
+    bot.send_message(cid,"اجازه داده نشد")
+@bot.callback_query_handler(func=lambda call: call.data.startswith("darkhast"))
+def def_barresi(call):
+    cid = call.message.chat.id
+    mid = call.message.message_id
+    markup=InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton("اجازه دادن",callback_data=f"ejazedadn_{cid}"),InlineKeyboardButton("اجازه ندادن",callback_data=f"ejazenadadn_{cid}"))
+    bot.send_message(admin,f"""
+آی دی کاربر:@{call.message.from_user.username}
+نام کاربر : {call.message.chat.first_name}
+*درخواست برای اضافه شدن به بازی*
+""",reply_markup=markup)
+    bot.send_message(cid,"درخواست شما ارسال شد")
+    bot.delete_message(cid,mid)
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith("panel"))
 def call_callback_panel_amar(call):
@@ -288,6 +396,7 @@ def call_callback_panel_amar(call):
 
 @bot.message_handler(commands=['start'])
 def command_start(m):
+    global activation
     cid = m.chat.id
     if cid != admin:
         databases.insert_users(cid)
@@ -299,6 +408,12 @@ def command_start(m):
             markup.add(InlineKeyboardButton("شروع بازی",callback_data="start"))
         elif status=="on":
             markup.add(InlineKeyboardButton("پایان بازی",callback_data="stop"))
+        
+        if activation=="off":
+            markup.add(InlineKeyboardButton("اجازه برای ارسال پیام بازیکنان",callback_data="activation"))
+        elif activation=="on":
+            markup.add(InlineKeyboardButton("قطع اجازه ارسال پیام بازیکنان",callback_data="deactivation"))
+
         markup.add(InlineKeyboardButton("مشاهده و تنظیمات بازیکنان",callback_data="show"))
         markup.add(InlineKeyboardButton('آمار تمامی کاربران',callback_data='panel_amar'))
         markup.add(InlineKeyboardButton('ارسال همگانی',callback_data='panel_brodcast'),InlineKeyboardButton('فوروارد همگانی',callback_data='panel_forall'))
@@ -307,7 +422,13 @@ def command_start(m):
 برای مدیریت بازی از دکمه های زیر استفاده کنید
 """,reply_markup=markup)
     else:
-        if is_user_member(cid ,chanel_id) :
+        dict_grop={chanel_id:"https://t.me/game_war_smokey",grop_id:"https://t.me/+M1lWxTZxKC05Mzk8"}
+        list_check=[]
+        for i in dict_grop:
+            if is_user_member(cid ,i)==False:
+                list_check.append(dict_grop[i])
+
+        if len(list_check)==0 :
             if cid not in dict_cid_countryname:
                 if status=="off":
                     markup=ReplyKeyboardMarkup()
@@ -318,15 +439,20 @@ def command_start(m):
                     markup.add(*list_markup)
                     bot.send_message(cid,"لطفا برای شروع بازی کشور مورد نظر خود را انتخاب کنید",reply_markup=markup)
                 else:
-                    bot.send_message(cid,"""
-شما نمیتوانید عضو  بازی شوید 🚫
+                    markup=InlineKeyboardMarkup()
+                    markup.add(InlineKeyboardButton("ارسال درخواست",callback_data="darkhast"))
+                    bot.send_message(cid,"""بازی درحال برگزاری است☢️
+                                     برای اضافه شدن به بازیی باید برای ادمین درخواست ارسال کنید
+                                      """,reply_markup=markup)
+#                     bot.send_message(cid,"""
+# شما نمیتوانید عضو  بازی شوید 🚫
 
-بازی درحال برگزاری است☢️
+# بازی درحال برگزاری است☢️
 
-اطلاعات بیشتر⬇️
+# اطلاعات بیشتر⬇️
 
-                                 @game_war_smokey
-""")
+#                                  @game_war_smokey
+# """)
             else:
                 markup=ReplyKeyboardMarkup()
                 markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
@@ -336,8 +462,13 @@ def command_start(m):
                 bot.send_message(cid,"شما قبلا کشور خود را انتخاب کرده اید",reply_markup=markup)
         else:
             markup=InlineKeyboardMarkup() 
-            markup.add(InlineKeyboardButton("کانال بازی",url="https://t.me/game_war_smokey"))
-            markup.add(InlineKeyboardButton("گروه بازی",url="https://t.me/+M1lWxTZxKC05Mzk8"))
+            for i in list_check:
+                if i=="https://t.me/game_war_smokey":
+                    markup.add(InlineKeyboardButton("کانال بازی",url=i))
+                else:
+                    markup.add(InlineKeyboardButton("گروه بازی",url=i))
+                # markup.add(InlineKeyboardButton("کانال بازی",url="https://t.me/game_war_smokey"))
+                # markup.add(InlineKeyboardButton("گروه بازی",url="https://t.me/+M1lWxTZxKC05Mzk8"))
             markup.add(InlineKeyboardButton("بررسی",callback_data="barresi")) 
             # markup.add(InlineKeyboardButton("کانال",url="https://t.me/+37s4G1zPx5E1YTlk")) # https://t.me/game_war_smokey
             bot.send_message(cid,f"""
@@ -381,59 +512,40 @@ def ability(m):
         userStep[cid]=5
         return
     if status=="on":
-        tz = pytz.timezone('Asia/Tehran')
-        now = datetime.now(tz)
-        start_time = now.replace(hour=16, minute=0, second=0, microsecond=0)  # 4 PM
-        end_time = now.replace(hour=20, minute=0, second=0, microsecond=0) 
+
+        # tz = pytz.timezone('Asia/Tehran')
+        # now = datetime.now(tz)
+        # start_time = now.replace(hour=16, minute=0, second=0, microsecond=0)  # 4 PM
+        # end_time = now.replace(hour=20, minute=0, second=0, microsecond=0) 
+
         if text=="خرید زیرساخت و تجاری🏗️":
-            if start_time <= now <= end_time:
+            if activation=="on":
                 markup=ReplyKeyboardMarkup(resize_keyboard=True)
                 markup.add("لغو و بازگشت به منو")
                 bot.send_message(cid,"لطفا نام ، تعداد و قیمت زیر ساختی را که میخواهید خریداری کنید ارسال کنید",reply_markup=markup)
                 userStep[cid]=1
             else:
-                bot.send_message(cid,"این قابلیت فقط از 4 ظهر تا 9 شب فعال است")
+                bot.send_message(cid,"در حال حاضر این قابلیت از طرف ادمین قطع شده است")
         elif text=="خرید نظامی 🪖":
-            if start_time <= now <= end_time:
+            # if start_time <= now <= end_time:
+            if activation=="on":
                 markup=ReplyKeyboardMarkup(resize_keyboard=True)
                 markup.add("لغو و بازگشت به منو")
                 bot.send_message(cid,"لطفا نام وسیله نظامی, تعداد و قیمت را ارسال کنید",reply_markup=markup)
                 userStep[cid]=2
             else:
-                bot.send_message(cid,"این قابلیت فقط از 4 ظهر تا 9 شب فعال است")
+                bot.send_message(cid,"در حال حاضر این قابلیت از طرف ادمین قطع شده است")
         elif text=="بیانیه کشور🗺️":
-            if start_time <= now <= end_time:   
+            if activation=="on":  
                 markup=ReplyKeyboardMarkup(resize_keyboard=True)
                 markup.add("لغو و بازگشت به منو")
                 bot.send_message(cid,"هر بیانیه  که میخاهید با کشور های دیگر در میان بگذارید را باید اینجا ارسال کنید",reply_markup=markup)
                 userStep[cid]=3
             else:
-                bot.send_message(cid,"این قابلیت فقط از 4 ظهر تا 9 شب فعال است")
-        # elif text=="اختراعات و سناریو📝":
-        #     markup=ReplyKeyboardMarkup(resize_keyboard=True)
-        #     markup.add("لغو و بازگشت به منو")
-        #     bot.send_message(cid,"لطفا اختراع خود را ارسال کنید",reply_markup=markup)
-        #     userStep[cid]=4
-        # elif text=="خرید یورو🛍️":
-        #     markup=ReplyKeyboardMarkup(resize_keyboard=True)
-        #     markup.add("لغو و بازگشت به منو")
-        #     bot.send_message(cid,"قیمت هر 3000 میلیون یورو 100 هزار تومان \n برای اطلاعات بیشتر و خرید پیام خود را ارسال کنید (پیام شما برای ادمین ارسال میشود)",reply_markup=markup)
-        #     userStep[cid]=5
-        # elif text=="ارتباط با ادمین👤":
-        #     markup=ReplyKeyboardMarkup(resize_keyboard=True)
-        #     markup.add("لغو و بازگشت به منو")
-        #     bot.send_message(cid,"لطفا پیام خود را ارسال کنید:",reply_markup=markup)
-        #     userStep[cid]=6
+                bot.send_message(cid,"در حال حاضر این قابلیت از طرف ادمین قطع شده است")
     else:
         bot.send_message(cid,"برای استفاده از این قابلیت ها باید صبر کنید که بازی شروع شود در صورت شروع بازی برای شما پیام ارسال میشود")
 
-# @bot.message_handler(content_types=['photo','video',"video_note","audio","voice","document","sticker","location","contact","text"])
-# def panel_set_photo(m):
-#     global userstep
-#     cid = m.chat.id
-#     mid = m.message_id
-#     if m.chat.type=="private":
-#         if get_user_step(m.chat.id)==1:
 
 @bot.message_handler(func=lambda m: get_user_step(m.chat.id)==1)
 def send_music(m):
@@ -441,6 +553,13 @@ def send_music(m):
     text=m.text
     print(m)
     bot.send_message(chanel_id,f"""
+#{dict_cid_countryname[cid]}
+*خرید زیرساخت و تجاری🏗️*
+- - - - - - - - - - - - - - - - - -
+{text}
+""")
+    
+    bot.send_message(daraii,f"""
 #{dict_cid_countryname[cid]}
 *خرید زیرساخت و تجاری🏗️*
 - - - - - - - - - - - - - - - - - -
@@ -459,6 +578,13 @@ def send_music(m):
     cid=m.chat.id
     text=m.text
     bot.send_message(chanel_id,f"""
+#{dict_cid_countryname[cid]}
+*خرید نظامی 🪖*
+- - - - - - - - - - - - - - - - - -
+{text}
+""")
+
+    bot.send_message(niro,f"""
 #{dict_cid_countryname[cid]}
 *خرید نظامی 🪖*
 - - - - - - - - - - - - - - - - - -
@@ -640,6 +766,29 @@ def panel_set_photo(m):
             userStep[cid]=0
             bot.send_message(cid,"پیام شما با موفقیت ارسال شد",reply_markup=markup)
 
+
+        elif get_user_step(m.chat.id)==4:
+            markup=InlineKeyboardMarkup()
+            markup.add(InlineKeyboardButton("ارسال پیام به کاربر",callback_data=f"send_{cid}"))
+            bot.send_photo(admin,photo_id,f"""
+#{dict_cid_countryname[cid]}
+آی دی بازیکن:@{m.from_user.username}
+نام بازیکن : {m.chat.first_name}
+*اختراعات و سناریو📝*
+- - - - - - - - - - - - - - - - - -
+{caption}
+""",reply_markup=markup)
+            markup=ReplyKeyboardMarkup()
+            markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
+            markup.add("بیانیه کشور🗺️","اختراعات و سناریو📝")
+            markup.add("خرید یورو🛍️")  
+            markup.add("ارتباط با ادمین👤")
+            userStep[cid]=0
+            bot.send_message(cid,"پیام شما با موفقیت ارسال شد",reply_markup=markup)
+
+
+
+
 @bot.message_handler(func=lambda m: True )
 def country(m):
     cid = m.chat.id
@@ -656,10 +805,13 @@ def country(m):
                 markup.add("بیانیه کشور🗺️","اختراعات و سناریو📝")
                 markup.add("خرید یورو🛍️")  
                 markup.add("ارتباط با ادمین👤")
-                image=bot.copy_message(cid,chanel_info_id,60)
+                image=bot.copy_message(cid,chanel_info_id,2)
                 for i in list_mid_info:
                     bot.copy_message(cid,chanel_info_id,i)
-                bot.send_message(cid,"کشور شما تایید شد ، صبر کنید بازی از طرف ادمین شروع بشه🗺️",reply_markup=markup)
+                if status=="off":
+                    bot.send_message(cid,"کشور شما تایید شد ، صبر کنید بازی از طرف ادمین شروع بشه🗺️",reply_markup=markup)
+                elif status=="on":
+                    bot.send_message(cid,"کشور شما تایید شد🗺️",reply_markup=markup)
             else:
                 bot.send_message(cid,"شما قبلا کشور خود را انتخاب کرده اید")
         else:
