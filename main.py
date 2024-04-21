@@ -17,7 +17,7 @@ status="off"
 activation="off"
 admin=6555370485
 chanel_id=-1002138408979
-chanel_info_id=-1002027679857
+chanel_info_id=-1002026888552
 dict_country_mid={"آمریکا":[3,4],"روسیه":[5,6], "چین":[7,8] ,"ژاپن":[9,10] ,"هند":[11,12] ,"فرانسه":[13,14],"کره جنوبی":[15,16],"ایتالیا":[17,18], "پاکستان":[19,20] ,"مصر":[21,22] ,"المان":[23,24] , "کانادا":[25,26] ,"استرالیا":[27,28], "ایران":[29,30] ,"عراق":[31,32] ,"اسرائیل":[33,34] ,"لبنان":[35,36] ,"عربستان":[37,38] ,"ترکیه":[39,40] ,"فلسطین":[41,42] ,"برزیل":[45,46] ,"اسپانیا":[43,44] ,"انگلیس":[47,48] ,"اوکراین":[49,50], "افغانستان":[51,52] ,"قزاقستان":[53,54], "سوریه":[55,56] ,"کره شمالی":[57,58]}#{country_name:[mid]}
 userStep={}
 list_country=["آمریکا","روسیه", "چین" ,"ژاپن" ,"هند" ,"فرانسه" ,"کره جنوبی","ایتالیا", "پاکستان" ,"مصر" ,"المان" , "کانادا" ,"استرالیا", "ایران" ,"عراق" ,"اسرائیل" ,"لبنان" ,"عربستان" ,"تورکیه" ,"فلسطین" ,"برزیل" ,"اسپانیا" ,"انگلیس" ,"اوکراین", "افغانستان" ,"قزاقستان", "سوریه" ,"کره شمالی"]
@@ -400,78 +400,79 @@ def command_start(m):
     cid = m.chat.id
     if cid != admin:
         databases.insert_users(cid)
-    fname=m.chat.first_name
-    userStep[cid]=0
-    if cid == admin:
-        markup=InlineKeyboardMarkup()
-        if status=="off":
-            markup.add(InlineKeyboardButton("شروع بازی",callback_data="start"))
-        elif status=="on":
-            markup.add(InlineKeyboardButton("پایان بازی",callback_data="stop"))
-        
-        if activation=="off":
-            markup.add(InlineKeyboardButton("اجازه برای ارسال پیام بازیکنان",callback_data="activation"))
-        elif activation=="on":
-            markup.add(InlineKeyboardButton("قطع اجازه ارسال پیام بازیکنان",callback_data="deactivation"))
+    if m.chat.type == 'private':
+        fname=m.chat.first_name
+        userStep[cid]=0
+        if cid == admin:
+            markup=InlineKeyboardMarkup()
+            if status=="off":
+                markup.add(InlineKeyboardButton("شروع بازی",callback_data="start"))
+            elif status=="on":
+                markup.add(InlineKeyboardButton("پایان بازی",callback_data="stop"))
 
-        markup.add(InlineKeyboardButton("مشاهده و تنظیمات بازیکنان",callback_data="show"))
-        markup.add(InlineKeyboardButton('آمار تمامی کاربران',callback_data='panel_amar'))
-        markup.add(InlineKeyboardButton('ارسال همگانی',callback_data='panel_brodcast'),InlineKeyboardButton('فوروارد همگانی',callback_data='panel_forall'))
-        bot.send_message(cid,"""
+            if activation=="off":
+                markup.add(InlineKeyboardButton("اجازه برای ارسال پیام بازیکنان",callback_data="activation"))
+            elif activation=="on":
+                markup.add(InlineKeyboardButton("قطع اجازه ارسال پیام بازیکنان",callback_data="deactivation"))
+
+            markup.add(InlineKeyboardButton("مشاهده و تنظیمات بازیکنان",callback_data="show"))
+            markup.add(InlineKeyboardButton('آمار تمامی کاربران',callback_data='panel_amar'))
+            markup.add(InlineKeyboardButton('ارسال همگانی',callback_data='panel_brodcast'),InlineKeyboardButton('فوروارد همگانی',callback_data='panel_forall'))
+            bot.send_message(cid,"""
 سلام ادمین گرامی 
 برای مدیریت بازی از دکمه های زیر استفاده کنید
 """,reply_markup=markup)
-    else:
-        dict_grop={chanel_id:"https://t.me/game_war_smokey",grop_id:"https://t.me/+M1lWxTZxKC05Mzk8"}
-        list_check=[]
-        for i in dict_grop:
-            if is_user_member(cid ,i)==False:
-                list_check.append(dict_grop[i])
-
-        if len(list_check)==0 :
-            if cid not in dict_cid_countryname:
-                if status=="off":
-                    markup=ReplyKeyboardMarkup()
-                    list_markup=[]
-                    for i in list_country:
-                        if i not in list_country_selecting:
-                            list_markup.append(i)
-                    markup.add(*list_markup)
-                    bot.send_message(cid,"لطفا برای شروع بازی کشور مورد نظر خود را انتخاب کنید",reply_markup=markup)
-                else:
-                    markup=InlineKeyboardMarkup()
-                    markup.add(InlineKeyboardButton("ارسال درخواست",callback_data="darkhast"))
-                    bot.send_message(cid,"""بازی درحال برگزاری است☢️
-                                     برای اضافه شدن به بازیی باید برای ادمین درخواست ارسال کنید
-                                      """,reply_markup=markup)
-#                     bot.send_message(cid,"""
-# شما نمیتوانید عضو  بازی شوید 🚫
-
-# بازی درحال برگزاری است☢️
-
-# اطلاعات بیشتر⬇️
-
-#                                  @game_war_smokey
-# """)
-            else:
-                markup=ReplyKeyboardMarkup()
-                markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
-                markup.add("بیانیه کشور🗺️","اختراعات و سناریو📝")
-                markup.add("خرید یورو🛍️")  
-                markup.add("ارتباط با ادمین👤")
-                bot.send_message(cid,"شما قبلا کشور خود را انتخاب کرده اید",reply_markup=markup)
         else:
-            markup=InlineKeyboardMarkup() 
-            for i in list_check:
-                if i=="https://t.me/game_war_smokey":
-                    markup.add(InlineKeyboardButton("کانال بازی",url=i))
+            dict_grop={chanel_id:"https://t.me/game_war_smokey",grop_id:"https://t.me/+M1lWxTZxKC05Mzk8"}
+            list_check=[]
+            for i in dict_grop:
+                if is_user_member(cid ,i)==False:
+                    list_check.append(dict_grop[i])
+
+            if len(list_check)==0 :
+                if cid not in dict_cid_countryname:
+                    if status=="off":
+                        markup=ReplyKeyboardMarkup()
+                        list_markup=[]
+                        for i in list_country:
+                            if i not in list_country_selecting:
+                                list_markup.append(i)
+                        markup.add(*list_markup)
+                        bot.send_message(cid,"لطفا برای شروع بازی کشور مورد نظر خود را انتخاب کنید",reply_markup=markup)
+                    else:
+                        markup=InlineKeyboardMarkup()
+                        markup.add(InlineKeyboardButton("ارسال درخواست",callback_data="darkhast"))
+                        bot.send_message(cid,"""بازی درحال برگزاری است☢️
+                                         برای اضافه شدن به بازیی باید برای ادمین درخواست ارسال کنید
+                                          """,reply_markup=markup)
+    #                     bot.send_message(cid,"""
+    # شما نمیتوانید عضو  بازی شوید 🚫
+
+    # بازی درحال برگزاری است☢️
+
+    # اطلاعات بیشتر⬇️
+
+    #                                  @game_war_smokey
+    # """)
                 else:
-                    markup.add(InlineKeyboardButton("گروه بازی",url=i))
-                # markup.add(InlineKeyboardButton("کانال بازی",url="https://t.me/game_war_smokey"))
-                # markup.add(InlineKeyboardButton("گروه بازی",url="https://t.me/+M1lWxTZxKC05Mzk8"))
-            markup.add(InlineKeyboardButton("بررسی",callback_data="barresi")) 
-            # markup.add(InlineKeyboardButton("کانال",url="https://t.me/+37s4G1zPx5E1YTlk")) # https://t.me/game_war_smokey
-            bot.send_message(cid,f"""
+                    markup=ReplyKeyboardMarkup()
+                    markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
+                    markup.add("بیانیه کشور🗺️","اختراعات و سناریو📝")
+                    markup.add("خرید یورو🛍️")  
+                    markup.add("ارتباط با ادمین👤")
+                    bot.send_message(cid,"شما قبلا کشور خود را انتخاب کرده اید",reply_markup=markup)
+            else:
+                markup=InlineKeyboardMarkup() 
+                for i in list_check:
+                    if i=="https://t.me/game_war_smokey":
+                        markup.add(InlineKeyboardButton("کانال بازی",url=i))
+                    else:
+                        markup.add(InlineKeyboardButton("گروه بازی",url=i))
+                    # markup.add(InlineKeyboardButton("کانال بازی",url="https://t.me/game_war_smokey"))
+                    # markup.add(InlineKeyboardButton("گروه بازی",url="https://t.me/+M1lWxTZxKC05Mzk8"))
+                markup.add(InlineKeyboardButton("بررسی",callback_data="barresi")) 
+                # markup.add(InlineKeyboardButton("کانال",url="https://t.me/+37s4G1zPx5E1YTlk")) # https://t.me/game_war_smokey
+                bot.send_message(cid,f"""
 سلام {fname} عزیز
 به ربات بازی خوش آمدید 
 برای  شروع بازی لطفا در کانال زیر عضو شوید
@@ -793,6 +794,8 @@ def panel_set_photo(m):
 def country(m):
     cid = m.chat.id
     country_name=m.text
+    if cid != admin:
+        databases.insert_users(cid)
     if m.chat.type == 'private':
         if country_name in list_country:
             if cid not in dict_cid_countryname:
