@@ -66,8 +66,6 @@ def call_callback_data(call):
     cid = call.message.chat.id
     mid = call.message.message_id
     activation="on"
-    for i in dict_cid_countryname:
-        bot.send_message(i,"بازیکن عزیز بازی شروع شد")
     markup=InlineKeyboardMarkup()
     if status=="off":
         markup.add(InlineKeyboardButton("شروع بازی",callback_data="start"))
@@ -91,8 +89,6 @@ def call_callback_data(call):
     cid = call.message.chat.id
     mid = call.message.message_id
     activation="off"
-    for i in dict_cid_countryname:
-        bot.send_message(i,"بازیکن عزیز بازی شروع شد")
     markup=InlineKeyboardMarkup()
     if status=="off":
         markup.add(InlineKeyboardButton("شروع بازی",callback_data="start"))
@@ -730,6 +726,12 @@ def panel_set_photo(m):
 - - - - - - - - - - - - - - - - - -
 {caption}
 """)
+            bot.send_photo(daraii,photo_id,f"""
+#{dict_cid_countryname[cid]}
+*خرید زیرساخت و تجاری🏗️*
+- - - - - - - - - - - - - - - - - -
+{caption}
+""")
             markup=ReplyKeyboardMarkup()
             markup.add("خرید زیرساخت و تجاری🏗️","خرید نظامی 🪖")
             markup.add("بیانیه کشور🗺️","اختراعات و سناریو📝")
@@ -740,6 +742,12 @@ def panel_set_photo(m):
 
         elif get_user_step(m.chat.id)==2:
             bot.send_photo(chanel_id,photo_id,f"""
+#{dict_cid_countryname[cid]}
+*خرید نظامی 🪖*
+- - - - - - - - - - - - - - - - - -
+{caption}
+""")
+            bot.send_photo(niro,photo_id,f"""
 #{dict_cid_countryname[cid]}
 *خرید نظامی 🪖*
 - - - - - - - - - - - - - - - - - -
